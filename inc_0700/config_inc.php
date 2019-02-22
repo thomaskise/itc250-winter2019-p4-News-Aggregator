@@ -117,6 +117,7 @@ if(startSession() && isset($_SESSION['AdminID']) && $config->theme != 'Bootswatc
 #nav1 is the main navigation - tilde separator below splits text of link from title attribute
 $nav1['index.php'] = "Home~A model for building largely static web pages";
 $nav1['surveys/'] = "Surveys~The entrance to our Survey App";
+$nav1['news/'] = "News~The entrance to our News App";
 $nav1['demo/demo_shared.php'] = "Shared~A demo page for building mysqli shared connection based applications.";
 $nav1['demo/demo_pdo.php'] = "PDO~A demo page for building PDO connection based applications.";
 $nav1['demo/demo_contact.php'] = "Contact~A demo for building postback forms";

@@ -15,8 +15,13 @@ require '../inc_0700/config_inc.php'; #provides configuration, pathing, error ha
  
 # SQL statement
 // change line 20 for topics
-//$sql = "select * from wn19_<??>";
-$sql = <?? - need>
+//$sql = "select * from wn19_<xxx>
+//Placeholder SQL to make page work
+$sql = "
+select CONCAT(a.FirstName, ' ', a.LastName) AdminName, s.SurveyID, s.Title, s.Description, 
+date_format(s.DateAdded, '%W %D %M %Y %H:%i') 'DateAdded' from "
+. PREFIX . "surveys s, " . PREFIX . "Admin a where s.AdminID=a.AdminID order by s.DateAdded desc
+";
 
 #Fills <title> tag. If left empty will default to $PageTitle in config_inc.php  
 $config->titleTag = '<??>';

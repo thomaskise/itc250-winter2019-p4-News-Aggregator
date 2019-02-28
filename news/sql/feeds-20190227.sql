@@ -5,7 +5,7 @@
 drop table if exists wn19_FeedCategories;
 create table wn19_FeedCategories(
 CategoryID int unsigned not null auto_increment primary key,
-Category varchar(120)
+CategoryName varchar(120) NOT NULL
 );
 insert into wn19_FeedCategories values(NULL, 'Food');
 insert into wn19_FeedCategories values(NULL, 'Art');
@@ -15,9 +15,9 @@ insert into wn19_FeedCategories values(NULL, 'Travel');
 drop table if exists wn19_Topics;
 create table wn19_Topics(
 TopicID int unsigned not null auto_increment primary key,
-TopicName varchar(120),
-TopicURL text,
-CategoryID int DEFAULT 0
+TopicName varchar(120) NOT NULL,
+TopicURL text NOT NULL,
+CategoryID int NOT NULL References wn19_FeedCategories(CategoryID)
 ); 
 
 insert into wn19_Topics values(NULL, 'Vegan', 'https://news.google.com/rss/search?q=vegan+foods&hl=en-US&gl=US&ceid=US:en', 1);

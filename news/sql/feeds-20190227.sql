@@ -17,7 +17,8 @@ create table wn19_Topics(
 TopicID int unsigned not null auto_increment primary key,
 TopicName varchar(120) NOT NULL,
 TopicURL text NOT NULL,
-CategoryID int NOT NULL References wn19_FeedCategories(CategoryID)
+CategoryID int NOT NULL,
+FOREIGN KEY (CategoryID) References wn19_FeedCategories(CategoryID)
 ); 
 
 insert into wn19_Topics values(NULL, 'Vegan', 'https://news.google.com/rss/search?q=vegan+foods&hl=en-US&gl=US&ceid=US:en', 1);

@@ -17,14 +17,18 @@ require '../inc_0700/config_inc.php'; #provides configuration, pathing, error ha
 // change line 20 for topics
 //$sql = "select * from wn19_<xxx>
 //Placeholder SQL to make page work
-$sql = "
+
+$sql = "Select * From wn19_FeedCategories";
+/*$sql = "
 select CONCAT(a.FirstName, ' ', a.LastName) AdminName, s.SurveyID, s.Title, s.Description, 
 date_format(s.DateAdded, '%W %D %M %Y %H:%i') 'DateAdded' from "
 . PREFIX . "surveys s, " . PREFIX . "Admin a where s.AdminID=a.AdminID order by s.DateAdded desc
-";
+";*/
+
+
 
 #Fills <title> tag. If left empty will default to $PageTitle in config_inc.php  
-$config->titleTag = '<??>';
+$config->titleTag = '<RSS Feed Categories>';
 
 #Fills <meta> tags.  Currently we're adding to the existing meta tags in config_inc.php
 $config->metaDescription = 'Seattle Central\'s ITC250 Class news are made with pure PHP! ' . $config->metaDescription;
@@ -57,8 +61,8 @@ get_header(); #defaults to theme header or header_inc.php
 <p>This page is the entry point of the application, meaning this page gets a link on your web site.  Since the current subject is surveys, we could name the link something clever like <a href="<?php echo VIRTUAL_PATH; ?>demo/demo_list_pager.php">surveys</a></p>
 <p>Use <b>demo_list_pager.php</b> and <b>demo_view_pager.php</b> as a starting point for building your own List/View web application!</p> 
 -->
-<p>This page is a list of all surveys created and current.</p>
-<p>To see the questions on a survey, select the Survey Title.</p><BR />
+<p>What category are you interested in learning more about today?.</p>
+<p>To see more detailed RSS Feeds please select from the following.</p><BR />
 <?php
 #reference images for pager
 //$prev = '<img src="' . $config->virtual_path . '/images/arrow_prev.gif" border="0" />';
@@ -69,7 +73,7 @@ $prev = '<i class="fa fa-chevron-circle-left"></i>';
 $next = '<i class="fa fa-chevron-circle-right"></i>';
 
 # Create instance of new 'pager' class
-$myPager = new Pager(2,'',$prev,$next,'');
+$myPager = new Pager(5,'',$prev,$next,'');
 $sql = $myPager->loadSQL($sql);  #load SQL, add offset
 
 # connection comes first in mysqli (improved) function
@@ -85,8 +89,8 @@ if (isset($_GET['pg'])) {
 if(mysqli_num_rows($result) > 0)
 {#records exist - process
 	if($myPager->showTotal()==1){
-        $itemz = "survey";}
-    else{$itemz = "surveys";}  //deal with plural
+        $itemz = "category";}
+    else{$itemz = "categories";}  //deal with plural
     # Output the number of surveys
     echo '<h4>We have ' . $myPager->showTotal() . ' ' . $itemz . ' as listed:</h4>';
     # Create the table header
@@ -95,9 +99,7 @@ if(mysqli_num_rows($result) > 0)
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">Date Created</th>
-                  <th scope="col">Survey Title</th>
-                  <th scope="col">Created by</th>
+                  <th scope="col">Feed Categories</th>
                 </tr>
               </thead>
               <tbody>';
@@ -105,9 +107,7 @@ if(mysqli_num_rows($result) > 0)
               {# process each row
                 echo '
                   <tr>
-                  <td>' . dbOut($row['DateAdded']) . '</td>
-                  <td><a href="' . VIRTUAL_PATH . 'surveys/survey_view.php?id=' . (int)$row['SurveyID'] . '">' . dbOut($row['Title']) . '</a></td>
-                  <td>' . dbOut($row['AdminName']) . '</td>
+                  <td><a href="' . VIRTUAL_PATH . 'news/topic_view.php?id=' . (int)$row['CategoryID'] . '">' . dbOut($row['CategoryName']) . '</a></td>
                   </tr>';
               }
               echo '</tbody>

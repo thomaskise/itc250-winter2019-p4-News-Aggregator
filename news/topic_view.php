@@ -23,78 +23,43 @@
  * @see Response.php
  * @see Choice.php
  */
-
+ 
 require '../inc_0700/config_inc.php'; #provides configuration, pathing, error handling, db credentials
-require 'filtration.php'; 
-header("Content-type: text/html; charset=utf-8");
-
 spl_autoload_register('MyAutoLoader::NamespaceLoader');//required to load SurveySez namespace objects
 $config->metaRobots = 'no index, no follow';#never index survey pages
-# check variable of item passed in - if invalid data, forcibly redirect back to demo_list.php page
-if(isset($_GET['feedid']) && (int)$_GET['feedid'] > 0){#proper data must be on querystring
-	 $myID = (int)$_GET['feedid']; #Convert to integer, will equate to zero if fails
-}else{
-	myRedirect(VIRTUAL_PATH . "news/index.php");
-}
-/*
-$mySurvey = new SurveySez\Survey($myID); //MY_Survey extends survey class so methods can be added
 
+# check variable of item passed in - if invalid data, forcibly redirect back to demo_list.php page
+if(isset($_GET['id']) && (int)$_GET['id'] > 0){#proper data must be on querystring
+	 $myID = (int)$_GET['id']; #Convert to integer, will equate to zero if fails
+}else{
+	myRedirect(VIRTUAL_PATH . "surveys/index.php");
+}
+
+$mySurvey = new SurveySez\Survey($myID); //MY_Survey extends survey class so methods can be added
 if($mySurvey->isValid)
 {
 	$config->titleTag = "'" . $mySurvey->Title . "' Survey!";
 }else{
 	$config->titleTag = smartTitle(); //use constant 
 }
-*/
 #END CONFIG AREA ---------------------------------------------------------- 
+
 get_header(); #defaults to theme header or header_inc.php
 ?>
-
-<?php 
-$sqlTopicID = "SELECT * FROM `wn19_Topics` WHERE `TopicID` = ".$myID."";
-$resultTopicID = mysqli_query(IDB::conn(),$sqlTopicID) or die(trigger_error(mysqli_error(IDB::conn()), E_USER_ERROR));
-
-?>
-<h3>News Detail</h3>
+<h3>Survey Detail</h3>
 
 <?php
-if(mysqli_num_rows($resultTopicID) > 0){
-  
-    # Output the number of surveys
-  	while($row = mysqli_fetch_assoc($resultTopicID)){
-    	echo '<li class="side-nav-item">';
-    	echo '<i class="dripicons-copy"></i>';
-    	echo '<a> '. $row['TopicName'].'</span> ';
-    	echo '</li>';
-    	$url = $row['TopicURL'];
-    	$file = file_get_contents($url);
-		$result = new SimpleXMLElement($file);
-		$image_url = '';
-		$number = 1;
-		foreach($result->channel->item as $item){
-  			echo '<br><br>Number: ' . $number ++. '<br><br>';
-  			echo 'Title: ' . excludeString('-', $item->title, 'right') .'<br>';
-  			echo 'Link: ' . $item->link .'<br>';
- 			/* echo 'Guid: ' . $item->guid.'<br>';*/
-  			echo 'PubDate: ' . $item->pubDate.'<br>';
-  
-  			$description =  trimSpace(stripHtmlTags(['p'], stripHtmlTags(['a', 'font'], $item->description, $content = true), $content = false));
-  
-  			echo 'Description: ' . $description.'<br>';
-  			echo 'Source: ' . $item->source.'<br>';
-  			if(isset($item->children('media', true)->content)){
-  				echo 'Img: ' . $item->children('media', true)->content->attributes()['url'];
-    			$image_url = $item->children('media', true)->content->attributes()['url'];
-  			}else{
-    			$image_url = 'None';
-  			}
-  		}
-	}
+
+if($mySurvey->isValid)
+{ #check to see if we have a valid SurveyID
+	echo '<p>' . $mySurvey->Description . '</p>';
+	echo $mySurvey->showQuestions();
+}else{
+	echo "The survey detail has not yet been created!";	
 }
-?>
 
-
-<?php
+ echo '<a href="' . VIRTUAL_PATH . 'surveys/index.php?pg=' . $_SESSION["currentpage"] . '">Check out another survey?</a>';
 
 get_footer(); #defaults to theme footer or footer_inc.php
-?>
+
+

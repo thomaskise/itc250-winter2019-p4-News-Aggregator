@@ -1,10 +1,5 @@
-<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-
-	
-
 <?php
 /**
  *************************************************************************
@@ -28,7 +23,7 @@
  */
 
 require '../inc_0700/config_inc.php'; #provides configuration, pathing, error handling, db credentials
-require 'include/config_news.php'; 
+require 'inc_news/config_news.php'; 
 
   
 $sqlTopicID = "SELECT * FROM `wn19_Topics` WHERE `TopicID` = ".$_GET['topid']."";
@@ -45,9 +40,7 @@ if(mysqli_num_rows($resultTopicID) > 0){
   
     # Output the number of surveys
   	while($row = mysqli_fetch_assoc($resultTopicID)){
-    	echo '<li>';
     	echo '<h3> <center>'. $row['TopicName'].'</center></h3> ';
-    	echo '</li>';
     	$url = $row['TopicURL'];
     	$file = file_get_contents($url);
 		$result = new SimpleXMLElement($file);
@@ -119,5 +112,3 @@ if(mysqli_num_rows($resultTopicID) > 0){
 <?php
 get_footer();
 ?>
-
-

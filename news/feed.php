@@ -28,7 +28,7 @@
  */
 
 require '../inc_0700/config_inc.php'; #provides configuration, pathing, error handling, db credentials
-require '../include/config_news.php'; 
+require 'include/config_news.php'; 
 
   
 $sqlTopicID = "SELECT * FROM `wn19_Topics` WHERE `TopicID` = ".$_GET['topid']."";

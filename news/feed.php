@@ -71,7 +71,7 @@ if(mysqli_num_rows($resultTopicID) > 0){
           	echo '<div class="col-sm-3">';
   			if(isset($item->children('media', true)->content)){
   				//echo 'Img: ' . $item->children('media', true)->content->attributes()['url'];
-              	echo '<img src="' . $item->children('media', true)->content->attributes()['url'].'" align="middle" alt="Smiley face" height="128" width="228">';
+              	echo '<img src="' . $item->children('media', true)->content->attributes()['url'].'" align="middle" alt="Smiley face" height="228" width="228">';
     			$image_url = $item->children('media', true)->content->attributes()['url'];
   			}else{
     			$image_url = 'None';

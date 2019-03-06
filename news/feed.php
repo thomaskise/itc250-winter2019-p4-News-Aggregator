@@ -1,3 +1,9 @@
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+	
 
 <?php
 /**
@@ -33,15 +39,14 @@ $resultTopicID = mysqli_query(IDB::conn(),$sqlTopicID) or die(trigger_error(mysq
 
 <div class="container">
 	<div id="accordion">  
-
-
+		<div class="panel-group" id="accordion">
 <?php
 if(mysqli_num_rows($resultTopicID) > 0){
   
     # Output the number of surveys
   	while($row = mysqli_fetch_assoc($resultTopicID)){
     	echo '<li>';
-    	echo '<h3> '. $row['TopicName'].'</h3> ';
+    	echo '<h3> <center>'. $row['TopicName'].'</center></h3> ';
     	echo '</li>';
     	$url = $row['TopicURL'];
     	$file = file_get_contents($url);
@@ -49,29 +54,70 @@ if(mysqli_num_rows($resultTopicID) > 0){
 		$image_url = '';
 		$number = 1;
 		foreach($result->channel->item as $item){
-  			echo '<br><br>Number: ' . $number ++. '<br><br>';
-  			echo 'Title: ' . excludeString('-', $item->title, 'right') .'<br>';
-  			echo 'Link: ' . $item->link .'<br>';
- 			/* echo 'Guid: ' . $item->guid.'<br>';*/
-  			echo 'PubDate: ' . $item->pubDate.'<br>';
-  
-  			$description =  trimSpace(stripHtmlTags(['p'], stripHtmlTags(['a', 'font'], $item->description, $content = true), $content = false));
-  
-  			echo 'Description: ' . $description.'<br>';
-  			echo 'Source: ' . $item->source.'<br>';
+          	echo '<div class="panel panel-default">';
+          	echo '<div class="panel-heading">';
+			echo '<h4 class="panel-title">';
+			echo '<a data-toggle="collapse" data-parent="#accordion" href="#collapse'.$number.'">';
+            echo $number . '. ';
+  			echo excludeString('-', $item->title, 'right');
+          	echo '</a>';
+			echo '</h4>';
+			echo '</div>';
+         	
+          	
+          	
+          	echo '<div id="collapse'.$number.'" class="panel-collapse collapse">';
+
+          	echo '<div class="col-sm-3">';
   			if(isset($item->children('media', true)->content)){
-  				echo 'Img: ' . $item->children('media', true)->content->attributes()['url'];
+  				//echo 'Img: ' . $item->children('media', true)->content->attributes()['url'];
+              	echo '<img src="' . $item->children('media', true)->content->attributes()['url'].'" align="middle" alt="Smiley face" height="128" width="228">';
     			$image_url = $item->children('media', true)->content->attributes()['url'];
   			}else{
     			$image_url = 'None';
   			}
+          	echo '</div>';
+          
+          	echo '<div class="col-sm-9">';
+			echo '<div class="panel-body">';
+          
+          	if (strstr($item->description, '<ol>') && strstr($item->description, '<li>')){
+              	$description =  strip_tags($item->description, '<ol><li>');
+            }else{
+              	$description =  trimSpace(stripHtmlTags(['p'], stripHtmlTags(['a', 'font'], $item->description, $content = true), $content = false));
+            }
+          	
+          	
+          	echo '<strong>Description:<br></strong>';
+  			echo '<a href="'. $item->link .'" target="_blank"> ' . $description.'</a><br><br>';
+  			
+ 			/* echo 'Guid: ' . $item->guid.'<br>';*/
+          	echo '<strong align="right">Source: </strong> ' . $item->source.'<br><br>';
+  			echo '<strong align="right">Date of Publication: </strong>' . $item->pubDate.'<br><br>';
+  
+          	echo '<a href="'. $item->link .'" target="_blank">' . $item->link .'</a><br>';
+          	echo '</div>';
+          	
+          
+           	echo '</div>';
+			echo '</div>';
+          	echo '</div>';
+          
+          	$number ++;
   		}
 	}
+ 
+
 }
 ?>
 </div>
+</div>
+  
+  
+  
 </div>  
 <?php
 get_footer();
 ?>
+
 

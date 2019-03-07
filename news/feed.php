@@ -1,5 +1,3 @@
-<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <?php
 /**
  *************************************************************************
@@ -25,6 +23,8 @@
 require '../inc_0700/config_inc.php'; #provides configuration, pathing, error handling, db credentials
 require 'inc_news/config_news.php'; 
 
+
+get_header();
   
 $sqlTopicID = "SELECT * FROM `wn19_Topics` WHERE `TopicID` = ".$_GET['topid']."";
 $resultTopicID = mysqli_query(IDB::conn(),$sqlTopicID) or die(trigger_error(mysqli_error(IDB::conn()), E_USER_ERROR));

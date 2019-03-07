@@ -22,7 +22,7 @@
  * @todo none
  */
     //lines 17-19 will be removed as these are redundant in the parent module
-    require '../inc_0700/config_inc.php'; 
+    require '../../inc_0700/config_inc.php'; 
     $url = 'https://news.google.com/rss/search?q=vegetarian+foods&hl=en-US&gl=US&ceid=US:en';
     $topid = '1';
 	$file = file_get_contents($url);

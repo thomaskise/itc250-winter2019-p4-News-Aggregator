@@ -27,6 +27,7 @@
     $topid = '1';
 	$file = file_get_contents($url);
     $result = new SimpleXMLElement($file);
+
 	//$result = new SimpleXMLElement($file);
     //echo $file;
     //echo $result->channel->item;
@@ -34,11 +35,13 @@
     startSession();
     
     $nowtime=time();
+
 // if the session is not set then set it
 // if it is set, then check for the topic
 // if the topic is found then check to see if it has expired
 // if any of the above fail, retrieve the rss feed from the internet
 // load the session data in either $file or $result (tbd)
+
 //    if(!isset($_SESSION['NewsFeeds'])){
         $_SESSION["NewsFeeds"] = array();        
         $cacheStartTime=$nowtime;

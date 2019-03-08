@@ -11,7 +11,6 @@
  * feed.php is a function to generate google rss from keywords and capture its 
  * content.
  *
- * Objects in this version are the Survey, Question & Answer objects
  * 
  * @package 
  * @author Derrick Mou
@@ -26,7 +25,7 @@ require 'inc_news/config_news.php';
 
 get_header();
   
-$sqlTopicID = "SELECT * FROM `wn19_Topics` WHERE `TopicID` = ".$_GET['topid']."";
+$sqlTopicID = "SELECT * FROM wn19_Topics WHERE TopicID = " . $_GET['id'];
 $resultTopicID = mysqli_query(IDB::conn(),$sqlTopicID) or die(trigger_error(mysqli_error(IDB::conn()), E_USER_ERROR));
 
 

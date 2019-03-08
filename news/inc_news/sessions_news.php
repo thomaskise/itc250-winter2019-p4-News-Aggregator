@@ -41,15 +41,21 @@
     $fileSource = '';
     $sessionFoundAlive = 'no';
 
-    if(!isset($_SESSION)){// if the session isn't set start the session and intitalize as array
+    session_name('NewsFeeds');
+    startSession();
+
+//if session not set, initialize
+    if(!isset($_SESSION['NewsFeeds'])){
         echo 'session not set <br />';
-        startSession();
         $_SESSION['NewsFeeds'] = array(); //think feeds - if we don't have an array, start one
     }//end if
     echo '<pre>';
         echo var_dump($_SESSION['NewsFeeds']);
     echo '</pre>';
-    foreach ($_SESSION['NewsFeeds'] as $feed) {//loop through sessions to find the right one if it exists and is not expired
+
+
+//loop through sessions to find the right one if it exists and is not expired
+    foreach ($_SESSION['NewsFeeds'] as $feed) {
         echo 'Here\'s the topic id I found: ' . $feed->TopicID . '<br />';
         if($feed->TopicID == $topid) {// find the topicID
             $secondsSinceRefresh == int(time() - int($feed->SessionStartTime) + 10);//add 10 seconds to allow time for retrieval
@@ -61,13 +67,16 @@
          }//end if topicID
     }//end foreach
 
-    if($sessionFoundAlive == 'no'){ //if the session isn't found alive, then set it
+//if the session isn't found alive, then set it
+    if($sessionFoundAlive == 'no'){
         echo 'sesssion null or not found, so start <br /><br />';
         $fileSource = 'session not found';
         $file = file_get_contents($url);// get the rss feed from the internet
         $_SESSION['NewsFeeds'][] = new NewsFeed($topid, time(), $file);
         $secondsSinceRefresh = time() - time();
     }
+
+//output results
         //dumpDie($_SESSION['NewsFeeds']);
         echo 'Results: <br />';
         echo 'was session found alive? ' . $sessionFoundAlive . ' <br /><br />';
@@ -83,7 +92,22 @@
         echo '</pre>';
         echo '<b><u>This is marginal success</u></b>';
 
-    
+/**
+* class NewsFeed
+* 
+*
+*
+* More stuff about the class
+*
+*<code>
+* $myClass = new someClass('Joe');
+*</code>
+*
+* @see RelatedClass
+* @todo none
+*/
+
+
 class NewsFeed{
     public $TopicID ='';
     public $SessionStartTime = '';

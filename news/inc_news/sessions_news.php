@@ -41,7 +41,7 @@
     $fileSource = '';
     $sessionFoundAlive = 'no';
 
-    if(!isset($_SESSION)){// if the session isn't set start the session and intitalize as array
+    if(!isset($_SESSION['NewsFeeds'])){// if the session isn't set start the session and intitalize as array
         echo 'session not set <br />';
         startSession();
         $_SESSION['NewsFeeds'] = array(); //think feeds - if we don't have an array, start one

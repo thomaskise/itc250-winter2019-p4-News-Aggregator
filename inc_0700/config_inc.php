@@ -1,5 +1,5 @@
 <?php
-/**
+/***
  * config_inc.php stores site-wide configuration settings, functions & file references
  * 
  * Stores configuration data like support email address, SUPPORT_EMAIL
@@ -21,7 +21,7 @@
 # START SETTINGS (show or hide page errors, turn on/off error logging)---------------------------------------------
 # We can un-comment the line below to either see default errors (1) or shut off visual errors completely (0). 
 //ini_set('error_reporting', E_ALL | E_STRICT);  # E_ALL | E_STRICT = currently tracking all errors & warnings
-$sub_folder = 'wn19/';//If app installed in subfolder, place here.  name of folder, no leading or trailing forward or backslash
+$sub_folder = 'wn19test/';//If app installed in subfolder, place here.  name of folder, no leading or trailing forward or backslash
 define('SHOW_ALL_ERRORS', true); # TRUE = SHOW ALL SITE ERRORS - if FALSE must be logged in as ADMIN to view errors
 define('LOG_ALL_ERRORS', true); # TRUE = TRACK ALL ERRORS IN ERROR LOG FILE (UPDATED 7/14 FOR ZEPHIR!)
 define('SECURE',true); # true forces secure connection, https, for all site pages
@@ -38,15 +38,7 @@ loadErrorHandler($error_handler);
  
 # START SETTINGS (php.ini overrides & other enviroment settings)---------------------------------------------------------
 ob_start();  #buffers our page to be prevent header errors. Call before INC files or ANY html!
-# set up sessions
-// override php.ini sessions for storage time
-ini_set('session.gc_maxlifetime', '3600'); //set session duration (maxlifetime) to 1 hour - 60 x 60 x 1
-// Change default session storage
-ini_set('session.save_path','/home/classes/horsey01/sessions');
-// set session cookie duration
-$cookie_path = "/";
-$cookie_timeout = 60 * 30; // in seconds
-session_set_cookie_params($cookie_timeout, $cookie_path);
+
 //force secure website
 if (SECURE && $_SERVER['SERVER_PORT'] != 443) {#redirect to force HTTPS
 	header("Location: https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
@@ -78,6 +70,13 @@ include INCLUDE_PATH . 'common_inc.php'; # Provides common utility functions - p
 include INCLUDE_PATH . 'custom_inc.php'; # Provides spot for custom utility functions - part of nmCommon package
 include INCLUDE_PATH . 'MyAutoLoader.php'; #Allows multiple versions of AutoLoaded classes
 # END INCLUDES (reference include files)---------------------------------------------------------------------
+# START SESSIONS SETTINGS --------------------------------------------------
+ini_set('session.gc_maxlifetime', '3600'); //set session duration (maxlifetime) to 1 hour - 60 x 60 x 1
+//include INCLUDE_PATH . 'session_db_inc.php'; //Session database handling include file
+ini_set('session.save_path','/home/thohar69/sessions'); // Change default session storage
+$cookie_path = "/";
+$cookie_timeout = 60 * 30; // in seconds
+session_set_cookie_params($cookie_timeout, $cookie_path);
 
 # CONTENT CONFIGURATION AREA (theme, content areas & nav arrays for header/footer )-----------------------------------------
 $config->theme = 

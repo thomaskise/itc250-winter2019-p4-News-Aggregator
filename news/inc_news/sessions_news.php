@@ -26,13 +26,13 @@
 //    $url = 'https://news.google.com/rss/search?q=vegetarian+foods&hl=en-US&gl=US&ceid=US:en';
 //    $url = 'https://news.google.com/rss/search?q=vegan+food&hl=en-US&gl=US&ceid=US:en';
 //    $url = 'https://news.google.com/rss/search?q=thai+food&hl=en-US&gl=US&ceid=US:en';
-//    $url = 'https://news.google.com/rss/search?q=modern+art&hl=en-US&gl=US&ceid=US:en'; 
+    $url = 'https://news.google.com/rss/search?q=modern+art&hl=en-US&gl=US&ceid=US:en'; 
 //    $url = 'https://news.google.com/rss/search?q=impressionism&hl=en-US&gl=US&ceid=US:en'; 
-    $url = 'https://news.google.com/rss/search?q=ancient+greek+art&hl=en-US&gl=US&ceid=US:en'; 
+//    $url = 'https://news.google.com/rss/search?q=ancient+greek+art&hl=en-US&gl=US&ceid=US:en'; 
 //    $url = 'https://news.google.com/rss/search?q=travel+grand+canyon&hl=en-US&gl=US&ceid=US:en'; 
 //    $url = 'https://news.google.com/rss/search?q=travel+disneyland&hl=en-US&gl=US&ceid=US:en'; 
 //    $url = 'https://news.google.com/rss/search?q=travel+london&hl=en-US&gl=US&ceid=US:en'; 
-    $topid = '6';
+    $topid = '4';
 
     $nowtime = time();
     $maxSession = 2 * 60;
@@ -48,13 +48,13 @@
  * _ACTIVE = 2
  **/
  
-    echo '<b><u>Session status values : 0=disabled; 1=none; 2=active):</b></u> ' . $currentStatus . '<br />';
+    echo '<b><u>Session status values : 0=disabled; 1=none; 2=active):</b></u><br />';
     $currentStatus = session_status();
     echo 'Session status before start: ' . $currentStatus . '<br />';
 
-    session_name('NewsFeeds');
+    //session_name('NewsFeeds');
     //startSession();
-    session_start();
+    //session_start();
     $currentStatus = session_status();
     echo 'Session status after start: ' . $currentStatus . '<br /><br />';
 
@@ -85,12 +85,14 @@
         echo '</pre>';
 
 //loop through sessions to find the right one if it exists and is not expired
-    foreach ($_SESSION['NewsFeeds'] as $feed) {
+    foreach ($_SESSION as $feed) {
         echo 'Here\'s the topic id I found: ' . $feed->TopicID . '<br />';
+//        echo 'Here\'s the topic id I found: ' . $TopicID . '<br />';
         if($feed->TopicID == $topid) {// find the topicID
             $secondsSinceRefresh == time() - $feed->SessionStartTime;//add 10 seconds to allow time for retrieval
+//            $secondsSinceRefresh == time() - $SessionStartTime;//add 10 seconds to allow time for retrieval
             if($maxSession >  $secondsSinceRefresh + 10) {//use the session if it is fresh (10 second jic is added)
-                $fileSource = 'In the session found & not expired (if-conditional within foreach)';
+                $fileSource = '<u>session found & not expired</u> (if-conditional within foreach)';
                 $sessionFoundAlive = 'yes';
                 $file = $feed->RssFeed;
             }//end if not timed out
@@ -99,7 +101,7 @@
 
 //if the session isn't found alive, then set it
     if($sessionFoundAlive == 'no'){
-        $fileSource = 'In the session not found alive (if-conditional)';
+        $fileSource = '<u>session not found alive</u> (if-conditional)';
         $file = file_get_contents($url);// get the rss feed from the internet
         $_SESSION['NewsFeeds'] = new NewsFeed($topid, time(), $file);
         $secondsSinceRefresh = time() - time();
@@ -113,14 +115,14 @@
         echo 'was session found alive? ' . $sessionFoundAlive . ' (If no then foreach not complete. If yes then foreach successful.) <br /><br />';
         echo 'max session: ' . $maxSession . ' seconds<br /><br />';
         echo 'seconds since refresh: ' . $secondsSinceRefresh . '<br /><br />';
-        echo 'Where was $file set?  ' . $fileSource . ' <br /><br />';
+        echo '$file was set in the   ' . $fileSource . ' <br /><br />';
        // echo 'file data: ' . $file . '<br />';
 
-        echo '<pre>';
-            echo '<b><u>Session dump at end ($_Session[NewsFeed]) - just after population:</u></b><br />';
-            var_dump($_SESSION['Newsfeed']) . '<br />';
-            //echo 'session id = ' . $_SESSION["NewsFeeds"]["SessionID"];
-        echo '</pre><br /><br />';
+//        echo '<pre>';
+//            echo '<b><u>Session dump at end ($_Session[NewsFeed]) - just after population:</u></b><br />';
+//            var_dump($_SESSION['Newsfeed']) . '<br />';
+//            //echo 'session id = ' . $_SESSION["NewsFeeds"]["SessionID"];
+//        echo '</pre><br /><br />';
 
         echo '<pre>';
             echo '<b><u>Session dump at end ($_Session) - just after population:</u></b><br />';

@@ -21,7 +21,7 @@
 # START SETTINGS (show or hide page errors, turn on/off error logging)---------------------------------------------
 # We can un-comment the line below to either see default errors (1) or shut off visual errors completely (0). 
 //ini_set('error_reporting', E_ALL | E_STRICT);  # E_ALL | E_STRICT = currently tracking all errors & warnings
-$sub_folder = 'wn19/';//If app installed in subfolder, place here.  name of folder, no leading or trailing forward or backslash
+$sub_folder = 'wn19test/';//If app installed in subfolder, place here.  name of folder, no leading or trailing forward or backslash
 define('SHOW_ALL_ERRORS', true); # TRUE = SHOW ALL SITE ERRORS - if FALSE must be logged in as ADMIN to view errors
 define('LOG_ALL_ERRORS', true); # TRUE = TRACK ALL ERRORS IN ERROR LOG FILE (UPDATED 7/14 FOR ZEPHIR!)
 define('SECURE',true); # true forces secure connection, https, for all site pages

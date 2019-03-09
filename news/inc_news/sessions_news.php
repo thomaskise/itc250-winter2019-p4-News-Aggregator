@@ -58,26 +58,31 @@
     $currentStatus = session_status();
     echo 'Session status after start: ' . $currentStatus . '<br /><br />';
 
+    echo '<b><u>Session started. Here\'s the var_dump: </b></u> <br />';
+    echo '<pre>';
+        echo var_dump($_SESSION) . '<br /><br />';
+    echo '</pre>';
+
+    if(!isset($_SESSION)){
+        echo '<b><u>General session ($_SESSION) was initialized. Here\'s the var_dump:</b></u> <br />';
+        $_SESSION['NewsFeeds'] = array(); //think feeds - if we don't have an array, start one       
+    }else {//end if
+        echo '<b><u>General session ($_SESSION) was already set. Here\'s the var_dump:</b></u>  <br />';
+    }
+    echo '<pre>';
+        echo var_dump($_SESSION) . '<br /><br />';
+    echo '</pre>';    
+
     //if session not set, initialize
         if(!isset($_SESSION['NewsFeeds'])){
-            echo '<b><u>NewsFeeds session not set. Dump of $_SESSION[NewsFeeds] : </b></u> <br />';
+            echo '<b><u>NewsFeeds session ($_SESSION[NewsFeeds]) was intialized. Here\'s the var_dump: </b></u> <br />';
             $_SESSION['NewsFeeds'] = array(); //think feeds - if we don't have an array, start one
         }else {//end if
-            echo '<b><u>NewsFeeds session set. Dump of $_SESSION[NewsFeeds] : </b></u>  <br />';
+            echo '<b><u>NewsFeeds session ($_SESSION[NewsFeeds]) was already set. Here\'s the var_dump: </b></u>  <br />';
         }
         echo '<pre>';
             echo var_dump($_SESSION['NewsFeeds']) . '<br /><br />';
         echo '</pre>';
-
-    if(!isset($_SESSION)){
-        echo '<b><u>General session not set. Dump of $_SESSION:</b></u> <br />';
-        $_SESSION['NewsFeeds'] = array(); //think feeds - if we don't have an array, start one       
-    }else {//end if
-        echo '<b><u>General session set. Dump of $_SESSION:</b></u>  <br />';
-    }
-    echo '<pre>';
-        echo var_dump($_SESSION) . '<br /><br />';
-    echo '</pre>';
 
 //loop through sessions to find the right one if it exists and is not expired
     foreach ($_SESSION['NewsFeeds'] as $feed) {

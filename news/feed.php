@@ -37,12 +37,18 @@ $resultTopicID = mysqli_query(IDB::conn(),$sqlTopicID) or die(trigger_error(mysq
 <?php
 if(mysqli_num_rows($resultTopicID) > 0){
   
-    # Output the number of surveys
+    # Output the number of topics, but this while I think needs to go away since we are only finding one topicID
   	while($row = mysqli_fetch_assoc($resultTopicID)){
-    	echo '<h3> <center>'. $row['TopicName'].'</center></h3> ';
-    	$url = $row['TopicURL'];
-    	$file = file_get_contents($url);
-		$result = new SimpleXMLElement($file);
+    	
+        $url = $row['TopicURL'];
+        // $currentTopicID is needed for NewFeed object build
+        $currentTopicID = $row['TopicID'];
+        // include the module that gets the RSS Feed ($file) from session (and refreshes session if not available)
+        include 'inc_news/sessions_news.php';
+        // att the seconds since the last refresh to the topic heading
+    	echo '<h3> <center>'. $row['TopicName'] . ' Seconds since refresh: ' . $secondsSinceRefresh .'</center></h3> ';
+                
+        $result = new SimpleXMLElement($file);
 		$image_url = '';
 		$number = 1;
 		foreach($result->channel->item as $item){

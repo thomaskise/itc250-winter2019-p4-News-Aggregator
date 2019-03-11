@@ -19,106 +19,38 @@
  * @version 1.0 March 12, 2019
  * @link https://<tbd>
  * @license https://www.apache.org/licenses/LICENSE-2.0
- * @todo none
+ * @todo create function based on this code
+ * @todo check into session GC - not sure what needs to be done
+ * @todo 
+ * @todo 
  */
-//   lines 25-35 will be removed as these are redundant in the parent module
-    require '../../inc_0700/config_inc.php'; 
-
-//    $currentTopicID = '1';$url = 'https://news.google.com/rss/search?q=vegetarian+foods&hl=en-US&gl=US&ceid=US:en';
-//    $currentTopicID = '2';$url = 'https://news.google.com/rss/search?q=vegan+food&hl=en-US&gl=US&ceid=US:en';
-//    $currentTopicID = '3';$url = 'https://news.google.com/rss/search?q=thai+food&hl=en-US&gl=US&ceid=US:en';
-//    $currentTopicID = '4';$url = 'https://news.google.com/rss/search?q=modern+art&hl=en-US&gl=US&ceid=US:en'; 
-//    $currentTopicID = '5';$url = 'https://news.google.com/rss/search?q=impressionism&hl=en-US&gl=US&ceid=US:en'; 
-//    $currentTopicID = '6';$url = 'https://news.google.com/rss/search?q=ancient+greek+art&hl=en-US&gl=US&ceid=US:en'; 
-    $currentTopicID = '7';$url = 'https://news.google.com/rss/search?q=travel+grand+canyon&hl=en-US&gl=US&ceid=US:en'; 
-//    $currentTopicID = '8';$url = 'https://news.google.com/rss/search?q=travel+disneyland&hl=en-US&gl=US&ceid=US:en'; 
-//    $currentTopicID = '9';$url = 'https://news.google.com/rss/search?q=travel+london&hl=en-US&gl=US&ceid=US:en'; 
-
-    $maxSession = 10 * 60;
+    $maxSession = 3 * 60;
     $file = '';
-    $fileSource = '';
     $secondsSinceRefresh = 0;
     $sessionFoundAlive = 'no';
 
-/**
- * Check the session status. Return values are:
- * _DISABLED = 0
- * _NONE = 1
- * _ACTIVE = 2
- **/
- 
-    echo '<b><u>Session status values : 0=disabled; 1=none; 2=active:</b></u><br />';
-    $currentStatus = session_status();
-    echo 'Session status before start: ' . $currentStatus . '<br /><br />';
-
-    startSession();
-    $currentStatus = session_status();
-    echo 'Session status after start: ' . $currentStatus . '<br /><br />';
-           
-    if(!isset($_SESSION['NewsFeeds'])){//if session not set, initialize
-        echo '<b><u>NewsFeeds session ($_SESSION[NewsFeeds]) was intialized. Here\'s the var_dump: </b></u> <br />';
+    //if session not set, initialize it as array
+    if(!isset($_SESSION['NewsFeeds'])){
         $_SESSION['NewsFeeds'] = array(); //think feeds - if we don't have an array, start one
-    }else {//end if
-        echo '<b><u>NewsFeeds session ($_SESSION[NewsFeeds]) was already set. Here\'s the var_dump: </b></u>  <br />';
-        echo '<pre>';
-            echo var_dump($_SESSION['NewsFeeds']) . '<br /><br />';
-        echo '</pre>';
-        echo '<pre>';
-            echo var_dump($_SESSION) . '<br /><br />';
-        echo '</pre>';
-        //loop through sessions to find the right one if it exists and is not expired
-        foreach ($_SESSION as $feed) {
-            echo 'Here\'s the $feed->topic id I found: ' . $feed->TopicID . '<br /><br />';
-            if($feed->TopicID == $currentTopicID) {// find the topicID
-                echo 'Now we\'re inside the \'topic if\' of the foreach loop<br /><br />';
-                $secondsSinceRefresh =  (time() - $feed->SessionStartTime);//add 10 seconds to allow time for retrieval
-                echo ' seconds current time = ' .  time() . '<br />';
-                echo '- seconds session start = ' . $feed->SessionStartTime . '<br />';
-                echo '= seconds since refresh ' . $secondsSinceRefresh . '<br /><br />';
-                if($maxSession >  $secondsSinceRefresh + 10) {//use the session if it is fresh (10 second jic is added)
-                    echo 'Now we\'re inside the \'timeout if\' of the foreach loop<br /><br />';
-                    $fileSource = '<u>session found & not expired</u> (if-conditional within foreach)';
-                    $sessionFoundAlive = 'yes';
-                    $file = $feed->RssFeed;
-                }//end if not timed out
-             }//end if topicID
-        }//end foreach
-    }//end if not isset
+    }//end if
 
-    //if the session isn't found alive, then set it
+    //loop through objects in the session to find the topicID if it exists and is not expired
+    foreach ($_SESSION['NewsFeeds'] as $feed) {
+        if($feed->TopicID == $currentTopicID) {// find the topicID
+            $secondsSinceRefresh =  (time() - $feed->SessionStartTime);//add 10 seconds to allow time for retrieval
+            if($maxSession >  $secondsSinceRefresh + 2) {//use the session if it is fresh (2 second jic is added)
+                $sessionFoundAlive = 'yes';
+                $file = $feed->RssFeed;
+            }//end if not timed out
+         }//end if topicID
+    }//end foreach
+
+    //if the session was just intitalized or the requested object wasn't found, then set up a new object for the currentTopicID
     if($sessionFoundAlive == 'no'){
-        $fileSource = '<u>session not found alive</u> (if-conditional)<br />';
         $file = file_get_contents($url);// get the rss feed from the internet
-        $_SESSION['NewsFeeds'] = new NewsFeed($currentTopicID, time(), $file);
+        $_SESSION['NewsFeeds'][] = new NewsFeed($currentTopicID, time(), $file);
         $secondsSinceRefresh = 0;
-        echo 'Final condition, if session not found alive, was just exectuted<br /><br />';
     }
-
-//output results - lines 97 - 191 will all be deleted after this is working.
-        //dumpDie($_SESSION['NewsFeeds']);
-        $currentStatus = session_status();
-        echo '<b><u>Results:</b></u><br />';
-        echo 'Session status at end: ' . $currentStatus . '<br /><br />';
-        echo 'Input topic id: ' . $currentTopicID . '<br /><br />';
-        echo 'was session found alive? ' . $sessionFoundAlive . ' (If no then foreach not complete. If yes then foreach successful.) <br /><br />';
-        echo 'max session: ' . $maxSession . ' seconds<br /><br />';
-        echo 'seconds since refresh: ' . $secondsSinceRefresh . '<br /><br />';
-        echo '$file was set in the   ' . $fileSource . ' <br /><br />';
-       // echo 'file data: ' . $file . '<br />';
-
-//        echo '<pre>';
-//            echo '<b><u>Session dump at end ($_Session[NewsFeed]) - just after population:</u></b><br />';
-//            var_dump($_SESSION['Newsfeed']) . '<br />';
-//            //echo 'session id = ' . $_SESSION["NewsFeeds"]["SessionID"];
-//        echo '</pre><br /><br />';
-    foreach ($_SESSION as $feed) {
-        echo '<pre>';
-            echo '<b><u>Session dump at end ($_Session) - just after population:</u></b><br />';
-            var_dump($_SESSION) . '<br />';
-            //echo 'session id = ' . $_SESSION["NewsFeeds"]["SessionID"];
-        echo '</pre>';
-    }
-        echo '<b><u>This is marginal success</u>, but why is the session being replaced instead of added to?<br /><br />';
 
 /**
 * class NewsFeed - creates an object for each news feed
@@ -137,8 +69,8 @@
 */
 
 class NewsFeed{
-    public $TopicID ='';
-    public $SessionStartTime = '';
+    public $TopicID = 0;
+    public $SessionStartTime = 0;
     public $RssFeed = '';
     
     public function __construct($TopicID, $SessionStartTime, $RssFeed){

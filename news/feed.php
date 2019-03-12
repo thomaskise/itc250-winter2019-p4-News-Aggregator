@@ -42,14 +42,20 @@ $resultTopicID = mysqli_query(IDB::conn(),$sqlTopicID) or die(trigger_error(mysq
 <?php
 if(mysqli_num_rows($resultTopicID) > 0){
     $file = ''; //initialize the $file variable coming back from getRssFeed()
+    $feedRefreshTime = 0;
+    $feedData = array();
     $row = mysqli_fetch_assoc($resultTopicID);
     $url = $row['TopicURL'];
     $currentTopicID = intval($row['TopicID']);
-    $file = getRssFeed($currentTopicID, $url);
+    $feedData = getRssFeed($currentTopicID, $url, $cookie_timeout);
+    $file = $feedData[0];
+    $feedRefreshTime = $feedData[1];
+    //for loop
+    for($x=0; $x<count($feedData); $x++) // $x++ means where x=x+1
     $result = new SimpleXMLElement($file);
-
     echo '<h3> <center>'. $row['TopicName'] . '</center></h3> ';
-
+    echo '<p>Last refresh of this feed was: ' . $feedRefreshTime . '</p>';
+    
     $image_url = '';
     $number = 1;
     foreach($result->channel->item as $item){

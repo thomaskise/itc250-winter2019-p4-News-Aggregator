@@ -112,8 +112,7 @@ class NewsFeed{
    * @todo none
    */
 
-function getRssFeed($currentTopicID, $url) {
-    $maxSession = 3 * 60;
+function getRssFeed($currentTopicID, $url, $maxSession) {
     $file = '';
     $secondsSinceRefresh = 0;
     $sessionFoundAlive = 'no';
@@ -124,6 +123,7 @@ function getRssFeed($currentTopicID, $url) {
     }else{//loop through objects in the session to find the topicID if it exists and is not expired
         foreach ($_SESSION['NewsFeeds'] as $feed) {
             if($feed->TopicID == $currentTopicID) {// find the topicID
+                $lastRefresh = date('m/d/Y H:i:s', $feed->SessionStartTime);
                 $secondsSinceRefresh =  (time() - $feed->SessionStartTime);//add 10 seconds to allow time for retrieval
                 if(($maxSession >  $secondsSinceRefresh + 2) && ($sessionFoundAlive == 'no')) {//use the session if it is fresh (2 second jic is added)
                     $sessionFoundAlive = 'yes';
@@ -137,9 +137,12 @@ function getRssFeed($currentTopicID, $url) {
     if($sessionFoundAlive == 'no'){
         $file = file_get_contents($url);// get the rss feed from the internet
         $_SESSION['NewsFeeds'][] = new NewsFeed($currentTopicID, time(), $file);
+        $lastRefresh = date('m/d/Y H:i:s', time());
         $secondsSinceRefresh = 0;
     }
-    return $file;   
+
+    $feedData = array($file, $lastRefresh);
+    return $feedData; 
 }
 
 ?>

@@ -70,7 +70,7 @@ get_header(); #defaults to theme header or header_inc.php
 		</tr>
 		<tr>
 			<td width="250" align="center"><a href="<?=ADMIN_PATH;?>admin_session_clean_all.php">Clean (wipe out) all old sessions.</a></td>
-            <td><b>Developer Only. <span class="changeToRed"> *** <?=$ClearSessionMessage?> ***</span></b></td>
+            <td><b>Developer Only. <span class="changeToRed"> <?=$ClearSessionMessage?> </span></b></td>
 		</tr>				
 	<?php
 	}

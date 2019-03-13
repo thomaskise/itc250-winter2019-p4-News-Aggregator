@@ -103,19 +103,22 @@ class NewsFeed{
    *    and then it returns the RSS feed file it retrieved from the interest as $file
    *
    * <code>
-   * $output = someFunction('Joe','1987-01-01');
+   * $feedData = getRssFeed($currentTopicID, $url, $cookie_timeout);
    * </code>
    *
    * @param interger $currentTopicID the topic id reguest
    * @param string $url is the url for retriving the RSS feed
-   * @return string $file is the RSS feed
+   * @return array $feedData
+   * @return string $feedData[0] = $file is the RSS feed
+   * @return string $feedData[1] = $lastRefresh is the formatted date/time ('m/d/Y H:i:s',)
+   * @return string $feedData[2] = 
    * @todo none
    */
 
 function getRssFeed($currentTopicID, $url, $maxSession) {
     $file = '';
     $secondsSinceRefresh = 0;
-    $sessionFoundAlive = 'no';
+    $sessionFoundAlive = 'n';
 
     //if session not set, initialize it as array
     if(!isset($_SESSION['NewsFeeds'])){
@@ -126,7 +129,7 @@ function getRssFeed($currentTopicID, $url, $maxSession) {
                 $lastRefresh = date('m/d/Y H:i:s', $feed->SessionStartTime);
                 $secondsSinceRefresh =  (time() - $feed->SessionStartTime);//add 10 seconds to allow time for retrieval
                 if(($maxSession >  $secondsSinceRefresh + 2) && ($sessionFoundAlive == 'no')) {//use the session if it is fresh (2 second jic is added)
-                    $sessionFoundAlive = 'yes';
+                    $sessionFoundAlive = 'y';
                     $file = $feed->RssFeed;
                 }//end if not timed out
              }//end if topicID
@@ -134,14 +137,14 @@ function getRssFeed($currentTopicID, $url, $maxSession) {
     }// end if-else
 
     //if the session was just intitalized or the requested object wasn't found, then set up a new object for the currentTopicID
-    if($sessionFoundAlive == 'no'){
+    if($sessionFoundAlive == 'n'){
         $file = file_get_contents($url);// get the rss feed from the internet
         $_SESSION['NewsFeeds'][] = new NewsFeed($currentTopicID, time(), $file);
         $lastRefresh = date('m/d/Y H:i:s', time());
         $secondsSinceRefresh = 0;
     }
-
-    $feedData = array($file, $lastRefresh);
+    
+    $feedData = array($file, $lastRefresh, $sessionFoundAlive);
     return $feedData; 
 }
 

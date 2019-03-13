@@ -50,12 +50,11 @@ if(mysqli_num_rows($resultTopicID) > 0){
     $feedData = getRssFeed($currentTopicID, $url, $cookie_timeout);
     $file = $feedData[0];
     $feedRefreshTime = $feedData[1];
-    //for loop
-    for($x=0; $x<count($feedData); $x++) // $x++ means where x=x+1
+
     $result = new SimpleXMLElement($file);
     echo '<h3> <center>'. $row['TopicName'] . '</center></h3> ';
-    echo '<p>Last refresh of this feed was: ' . $feedRefreshTime . '</p>';
-    
+    echo '<p>Last refresh of this feed was: ' . $feedRefreshTime . ' </p>';
+
     $image_url = '';
     $number = 1;
     foreach($result->channel->item as $item){

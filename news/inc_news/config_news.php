@@ -61,9 +61,9 @@ function excludeString($replacedString, $originalString, $a){
    * stripHtmlTags(['a', 'font']
    * </code>
    *
-   * @param array $tags deleted tag (Array Form)
+   * @param array  $tags deleted tag (Array Form)
    * @param string $str Html String
-   * @param bool $content true Keeps the contents of the tag text
+   * @param bool   $content true Keeps the contents of the tag text
    * @return String Filtered information
 */
 function stripHtmlTags($tags, $str, $content = true)

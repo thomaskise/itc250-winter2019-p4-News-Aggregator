@@ -1,19 +1,23 @@
 <?php
 /**
- * admin.php session protected 'dashboard' page of links to administrator tool pages
+ *************************************************************************
+ *  admin_session_clean.php
  *
- * Use this file as a landing page after successfully logging in as an administrator.  
- * Be sure this page is not publicly accessible by referencing admin_only_inc.php
- * 
+ *************************************************************************
+ *
+ * admin_session_clean.php is the clean (wipe out) ALL old sessions
+ * or clean (wipe out) ONE old sessions
+ *
  * @package nmAdmin
+ * @subpackage Admin Session Clean
+ * @author itc250 winter 2019 project team
  * @author Bill Newman <williamnewman@gmail.com>
+ * @author Junqiao Mou(Derrick)
+ * @version 1.0 March 14, 2019 (New version)
  * @version 2.14 2012/10/01
  * @link http://www.newmanix.com/
- * @license https://www.apache.org/licenses/LICENSE-2.0
- * @see $config->adminLogin.php
- * @see $config->adminValidate.php
- * @see $config->adminLogout.php
- * @see admin_only_inc.php 
+ * @link https://d.zjwda.org/admin/
+ * @license http://www.apache.org/licenses/LICENSE-2.0
  * @todo none
  */
 

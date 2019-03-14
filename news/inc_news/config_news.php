@@ -18,7 +18,22 @@
  */
 
 
-/*Function  the left means to exclude the left side of the specified string, right means to exclude  to the right of the specified string */
+
+ /**
+   * Exclude the side of the specified string
+   *
+   * The left means to exclude the left side of the specified string,
+   * right means to exclude to the right of the specified string
+   *
+   * <code>
+   * excludeString('-', $item->title, 'right');
+   * </code>
+   *
+   * @param string $replacedString Specified String
+   * @param string $originalString Original String
+   * @param string $a              Left or Eifht String
+   * @return String
+*/
 function excludeString($replacedString, $originalString, $a){
     if(!$replacedString){
         return "The replaced string does not exist";
@@ -38,7 +53,19 @@ function excludeString($replacedString, $originalString, $a){
 
 }
 
-// Strip the html tage
+
+ /**
+   * Delete specified html tage
+   *
+   * <code>
+   * stripHtmlTags(['a', 'font']
+   * </code>
+   *
+   * @param array  $tags deleted tag (Array Form)
+   * @param string $str Html data
+   * @param bool   $content true Keeps the contents of the tag text
+   * @return String Filtered information
+*/
 function stripHtmlTags($tags, $str, $content = true)
 {
     $html = [];
@@ -56,7 +83,18 @@ function stripHtmlTags($tags, $str, $content = true)
     return $data;
 }
 
-//	Rrim the space 
+ /**
+   * Rrim the space 
+   *
+   * Replace all occurrences of the space with the replacement string
+   *
+   * <code>
+   * trimSpace($str);
+   * </code>
+   *
+   * @param string $str The data that needs to be stripped of spaces
+   * @return String
+*/
 function trimSpace($str){
     $trimResult = array("&nbsp;");
   	//	Replace all occurrences of the search string with the replacement string

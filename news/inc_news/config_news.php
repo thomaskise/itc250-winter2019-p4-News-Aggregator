@@ -125,8 +125,8 @@ function getRssFeed($currentTopicID, $url, $maxSession) {
             if($feed->TopicID == $currentTopicID) {// find the topicID
                 $lastRefresh = date('m/d/Y H:i:s', $feed->SessionStartTime);
                 $secondsSinceRefresh =  (time() - $feed->SessionStartTime);//add 10 seconds to allow time for retrieval
-                if(($maxSession >  $secondsSinceRefresh + 2) && ($sessionFoundAlive == 'n')) {//use the session if it is fresh (2 second jic is added)
-                    $sessionFoundAlive = 'yes';
+                if(($maxSession >  $secondsSinceRefresh + 2) && ($sessionFoundAlive == 'no')) {//use the session if it is fresh (2 second jic is added)
+                    $sessionFoundAlive = 'y';
                     $file = $feed->RssFeed;
                 }//end if not timed out
              }//end if topicID

@@ -10,7 +10,7 @@
  * @author Elizabeth Jones
  * @author Fikirte Mulugeta
  * @version 1.0 March 12, 2019
- * @link https://<tbd>
+ * @link https://kiseharrington.com/wn19/news/
  * @license http://www.apache.org/licenses/LICENSE-2.0
  * @see related_file.php
  * @see other_related_file.php
@@ -128,7 +128,7 @@ function getRssFeed($currentTopicID, $url, $maxSession) {
             if($feed->TopicID == $currentTopicID) {// find the topicID
                 $lastRefresh = date('m/d/Y H:i:s', $feed->SessionStartTime);
                 $secondsSinceRefresh =  (time() - $feed->SessionStartTime);//add 10 seconds to allow time for retrieval
-                if(($maxSession >  $secondsSinceRefresh + 2) && ($sessionFoundAlive == 'no')) {//use the session if it is fresh (2 second jic is added)
+                if(($maxSession >  $secondsSinceRefresh + 2) && ($sessionFoundAlive == 'n')) {//use the session if it is fresh (2 second jic is added)
                     $sessionFoundAlive = 'y';
                     $file = $feed->RssFeed;
                 }//end if not timed out

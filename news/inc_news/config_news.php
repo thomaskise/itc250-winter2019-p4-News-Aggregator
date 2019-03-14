@@ -115,7 +115,7 @@ class NewsFeed{
 function getRssFeed($currentTopicID, $url, $maxSession) {
     $file = '';
     $secondsSinceRefresh = 0;
-    $sessionFoundAlive = 'no';
+    $sessionFoundAlive = 'n';
 
     //if session not set, initialize it as array
     if(!isset($_SESSION['NewsFeeds'])){
@@ -125,7 +125,7 @@ function getRssFeed($currentTopicID, $url, $maxSession) {
             if($feed->TopicID == $currentTopicID) {// find the topicID
                 $lastRefresh = date('m/d/Y H:i:s', $feed->SessionStartTime);
                 $secondsSinceRefresh =  (time() - $feed->SessionStartTime);//add 10 seconds to allow time for retrieval
-                if(($maxSession >  $secondsSinceRefresh + 2) && ($sessionFoundAlive == 'no')) {//use the session if it is fresh (2 second jic is added)
+                if(($maxSession >  $secondsSinceRefresh + 2) && ($sessionFoundAlive == 'n')) {//use the session if it is fresh (2 second jic is added)
                     $sessionFoundAlive = 'yes';
                     $file = $feed->RssFeed;
                 }//end if not timed out
@@ -134,7 +134,7 @@ function getRssFeed($currentTopicID, $url, $maxSession) {
     }// end if-else
 
     //if the session was just intitalized or the requested object wasn't found, then set up a new object for the currentTopicID
-    if($sessionFoundAlive == 'no'){
+    if($sessionFoundAlive == 'n'){
         $file = file_get_contents($url);// get the rss feed from the internet
         $_SESSION['NewsFeeds'][] = new NewsFeed($currentTopicID, time(), $file);
         $lastRefresh = date('m/d/Y H:i:s', time());

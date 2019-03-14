@@ -62,7 +62,7 @@ function excludeString($replacedString, $originalString, $a){
    * </code>
    *
    * @param array  $tags deleted tag (Array Form)
-   * @param string $str Html String
+   * @param string $str Html data
    * @param bool   $content true Keeps the contents of the tag text
    * @return String Filtered information
 */

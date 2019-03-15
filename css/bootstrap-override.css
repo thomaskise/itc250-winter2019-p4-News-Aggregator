@@ -2,7 +2,8 @@
 
 .container {
     background-color: #f5f5dc;
-    .changeToRed {
-        color: red
-    }
 }
+
+.refreshTable {
+        text-align: right;
+    }

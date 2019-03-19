@@ -1,0 +1,8 @@
+*.bak*
+*.BAK*
+*.save*
+*.SAVE*
+*sess_*
+SAVE*
+*stub*
+save*

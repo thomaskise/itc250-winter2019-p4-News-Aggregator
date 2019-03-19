@@ -85,6 +85,7 @@ function showTopics()
 				</tr>
 				';
 		}
+        
 		echo '</table>';
 	}else{//no records
       echo '<div align="center"><h3>Currently No Topics in Database.</h3></div>';
@@ -104,7 +105,7 @@ function addForm()
 		{//check form data for valid info
 			if(empty(thisForm.TopicName,"Please Enter Topic Name")){return false;}
 			if(empty(thisForm.TopicURL,"Please Topic URL")){return false;}
-			if(!isCategoryID(thisForm.CategoryID,"Please Enter a Valid CategoryID")){return false;}
+			if(!isCategoryName(thisForm.CategoryName,"Please Enter a Valid CategoryName")){return false;}
 			return true;//if all is passed, submit!
 		}
 	</script>';
@@ -126,13 +127,24 @@ function addForm()
 		   		<font color="red"><b>*</b></font> <em>(alphanumerics & punctuation)</em>
 		   	</td>
 	   </tr>
-	   <tr><td align="right">CategoryID</td>
+	   <tr><td align="right">Category Name</td>
 		   	<td>
-		   		<input type="text" name="CategoryID" />
-		   		<font color="red"><b>*</b></font> <em>(valid CategoryID only)</em>
+		   		<input type="text" name="CategoryName" />
+		   		<font color="red"><b>*</b></font> <em>(valid CategoryName only)</em>
 		   	</td>
-	   </tr>
-	   <input type="hidden" name="act" value="insert" />
+	   </tr>' .
+//       <tr>
+//            <td align="right">Category Name</td>
+//		   	<td>' .
+//            
+//                $valuStr = ",1,2,3";
+//                $dbStr = "1";
+//                $lblStr = "Pick A Topic,Food, Art,Travel";
+//                createSelect("select","topic",$valuStr,$dbStr,$lblStr,",");
+//            '
+//            </td>
+//       </tr>       
+	   '<input type="hidden" name="act" value="insert" />
 	   <tr>
 	   		<td align="center" colspan="2">
 	   			<input type="submit" value="Add Topic!"><em>(<font color="red"><b>*</b> required field</font>)</em>
@@ -154,26 +166,17 @@ function insertExecute()
 
 	$TopicName = strip_tags(iformReq('TopicName',$iConn));
 	$TopicURL = strip_tags(iformReq('TopicURL',$iConn));
-	$CategoryID = strip_tags(iformReq('CategoryID',$iConn));
+	$CategoryName = strip_tags(iformReq('CategoryName',$iConn));
 	
 	//next check for specific issues with data
-	if(!ctype_graph($_POST['TopicName'])|| !ctype_graph($_POST['TopicURL']))
+	if(!ctype_graph($_POST['TopicName'])|| !ctype_graph($_POST['TopicURL'])|| !ctype_graph($_POST['CategoryName']))
 	{//data must be alphanumeric or punctuation only	
-		feedback("Topic Name and Topic URL must contain letters, numbers or punctuation");
+		feedback("Topic Name, Topic URL and Category Name must contain letters, numbers or punctuation");
 		myRedirect(THIS_PAGE);
 	}
 	
-	
-	if(!is_numeric($_POST['CategoryID']))
-	{//data must be alphanumeric or punctuation only	
-		feedback("Data entered for CategoryID must be numeric");
-		myRedirect(THIS_PAGE);
-	}
-//    $CategoryID = intval($CategoryID);
-    //build string for SQL insert with replacement vars, %s for string, %d for digits 
-//    $sql = "INSERT INTO " . PREFIX . "Topics (TopicName, TopicURL, CategoryID VALUES ('%s','%s',%s)"; 
-    $sql = 
-        "INSERT INTO " . PREFIX . "Topics (TopicName, TopicURL, CategoryID) VALUES ('$TopicName', '$TopicURL', (SELECT CategoryID FROM " . PREFIX . "FeedCategories WHERE CategoryName= 'Network Radio'))"; 
+	$sql = 
+        "INSERT INTO " . PREFIX . "Topics (TopicName, TopicURL, CategoryID) VALUES ('$TopicName', '$TopicURL', (SELECT CategoryID FROM " . PREFIX . "FeedCategories WHERE CategoryName= '$CategoryName'))"; 
 
     # sprintf() allows us to filter (parameterize) form data 
 //	$sql = sprintf($sql,$TopicName,$TopicURL,$CategoryID);

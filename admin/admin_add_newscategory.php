@@ -136,13 +136,6 @@ function insertExecute()
 
 	$CategoryName = strip_tags(iformReq('CategoryName',$iConn));
 		
-	//next check for specific issues with data
-	if(!ctype_graph($_POST['CategoryName']))
-	{//data must be alphanumeric or punctuation only	
-		feedback("Category Name must contain letters, numbers or punctuation");
-		myRedirect(THIS_PAGE);
-	}
-	
 	
     //build string for SQL insert with replacement vars, %s for string, %d for digits 
     $sql = "INSERT INTO " . PREFIX . "FeedCategories (CategoryName) VALUES ('%s')"; 

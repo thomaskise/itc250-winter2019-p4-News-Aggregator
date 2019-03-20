@@ -73,8 +73,8 @@ get_header(); #defaults to theme header or header_inc.php
 			<td><b>Developer Only.</b></td>
 		</tr>
         <tr>
-			<td width="250" align="center"><a href="<?=ADMIN_PATH;?>admin_add_newstopic.php" target="_blank">Add new news topic. (WIP)</a></td>
-			<td><b>Developer Only. You must know  the CategoryID to add a topic</b></td>
+			<td width="250" align="center"><a href="<?=ADMIN_PATH;?>admin_add_newstopic.php" target="_blank">Add new news topic.</a></td>
+			<td><b>Developer Only.</b></td>
 		</tr>	
 	<?php
 	}

@@ -105,7 +105,7 @@ function addForm()
 		{//check form data for valid info
 			if(empty(thisForm.TopicName,"Please Enter Topic Name")){return false;}
 			if(empty(thisForm.TopicURL,"Please Topic URL")){return false;}
-			if(!isCategoryName(thisForm.CategoryName,"Please Enter a Valid CategoryName")){return false;}
+			if(!isCategorySelect(thisForm.CategorySelect,"Please Enter a Valid CategorySelect")){return false;}
 			return true;//if all is passed, submit!
 		}
 	</script>';
@@ -128,23 +128,29 @@ function addForm()
 		   	</td>
 	   </tr>
 	   <tr><td align="right">Category Name</td>
-		   	<td>
-		   		<input type="text" name="CategoryName" />
-		   		<font color="red"><b>*</b></font> <em>(valid CategoryName only)</em>
+		   	<td>';  
+        
+                $sql = "select CategoryID,CategoryName FROM " . PREFIX . "FeedCategories";
+                $result = mysqli_query(IDB::conn(),$sql) or die(trigger_error(mysqli_error(IDB::conn()), E_USER_ERROR));
+                if (mysqli_num_rows($result) > 0)//at least one record!
+                {//show results
+                    echo '<select name="CategorySelect" required="required" title="Select Category">';
+                    echo '<option value="">Select Category</option>';
+
+                    while ($row = mysqli_fetch_assoc($result))
+                    {//dbOut() function is a 'wrapper' designed to strip slashes, etc. of data leaving db
+                        echo '<option value="' . dbOut($row['CategoryName']) . '">' . dbOut($row['CategoryName']) . '</option>';
+                    }
+                    echo '</select>';
+                    }else{//no records
+                      echo 'No Categories to select!';
+                    }
+                    @mysqli_free_result($result); //free resources
+
+                    echo '<font color="red"><b>*</b></font>
 		   	</td>
-	   </tr>' .
-//       <tr>
-//            <td align="right">Category Name</td>
-//		   	<td>' .
-//            
-//                $valuStr = ",1,2,3";
-//                $dbStr = "1";
-//                $lblStr = "Pick A Topic,Food, Art,Travel";
-//                createSelect("select","topic",$valuStr,$dbStr,$lblStr,",");
-//            '
-//            </td>
-//       </tr>       
-	   '<input type="hidden" name="act" value="insert" />
+	   </tr>   
+	   <input type="hidden" name="act" value="insert" />
 	   <tr>
 	   		<td align="center" colspan="2">
 	   			<input type="submit" value="Add Topic!"><em>(<font color="red"><b>*</b> required field</font>)</em>
@@ -166,17 +172,17 @@ function insertExecute()
 
 	$TopicName = strip_tags(iformReq('TopicName',$iConn));
 	$TopicURL = strip_tags(iformReq('TopicURL',$iConn));
-	$CategoryName = strip_tags(iformReq('CategoryName',$iConn));
+	$CategorySelect = strip_tags(iformReq('CategorySelect',$iConn));
 	
 	//next check for specific issues with data
-	if(!ctype_graph($_POST['TopicName'])|| !ctype_graph($_POST['TopicURL'])|| !ctype_graph($_POST['CategoryName']))
+	if(!ctype_graph($_POST['TopicURL']))
 	{//data must be alphanumeric or punctuation only	
-		feedback("Topic Name, Topic URL and Category Name must contain letters, numbers or punctuation");
+		feedback("Topic Name and Topic URL must contain letters, numbers or punctuation");
 		myRedirect(THIS_PAGE);
 	}
 	
 	$sql = 
-        "INSERT INTO " . PREFIX . "Topics (TopicName, TopicURL, CategoryID) VALUES ('$TopicName', '$TopicURL', (SELECT CategoryID FROM " . PREFIX . "FeedCategories WHERE CategoryName= '$CategoryName'))"; 
+        "INSERT INTO " . PREFIX . "Topics (TopicName, TopicURL, CategoryID) VALUES ('$TopicName', '$TopicURL', (SELECT CategoryID FROM " . PREFIX . "FeedCategories WHERE CategoryName= '$CategorySelect'))"; 
 
     # sprintf() allows us to filter (parameterize) form data 
 //	$sql = sprintf($sql,$TopicName,$TopicURL,$CategoryID);
@@ -191,4 +197,29 @@ function insertExecute()
 	}
 	myRedirect(THIS_PAGE);
 }
+
+function showCategorySelect()
+{//Select category
+	global $config;
+
+	$sql = "select CategoryID,CategoryName FROM " . PREFIX . "FeedCategories";
+	$result = mysqli_query(IDB::conn(),$sql) or die(trigger_error(mysqli_error(IDB::conn()), E_USER_ERROR));
+	if (mysqli_num_rows($result) > 0)//at least one record!
+	{//show results
+		echo '<select name="CategorySelect" required="required" title="Select Category">';
+        echo '<option value="">Select Category</option>';
+
+		while ($row = mysqli_fetch_assoc($result))
+		{//dbOut() function is a 'wrapper' designed to strip slashes, etc. of data leaving db
+			echo '<option value="' . dbOut($row['CategoryName']) . '">' . dbOut($row['CategoryName']) . '</option>';
+//			echo '<option value="' . dbOut($row['CategoryName']) . '">' . dbOut($row['CategoryName']) . '</option>';
+		}
+		echo '</select>';
+	}else{//no records
+      echo 'No Categories to select!';
+	}
+	@mysqli_free_result($result); //free resources
+
+}
+
 
